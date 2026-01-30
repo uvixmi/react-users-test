@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Button } from 'antd';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '../api/users';
 
@@ -25,11 +25,28 @@ export const CreateUserModal: React.FC<Props> = ({ open, onClose }) => {
     <Modal
       title="Создание пользователя"
       open={open}
-      onOk={() => form.submit()}
       onCancel={onClose}
-      confirmLoading={isLoading}
       maskClosable={false}
       closable={!isLoading}
+      getContainer={false}
+      footer={[
+        <Button
+          key="create"
+          type="primary"
+          onClick={() => form.submit()}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Создаем...' : 'Создать'}
+        </Button>,
+        <Button
+          key="cancel"
+          type="primary"
+          onClick={onClose}
+          disabled={isLoading}
+        >
+          Отмена
+        </Button>
+      ]}
     >
       <Form
         form={form}
@@ -41,7 +58,7 @@ export const CreateUserModal: React.FC<Props> = ({ open, onClose }) => {
           name="name"
           rules={[{ required: true, message: 'Обязательное поле' }]}
         >
-          <Input />
+          <Input disabled={isLoading} />
         </Form.Item>
 
         <Form.Item
@@ -52,7 +69,7 @@ export const CreateUserModal: React.FC<Props> = ({ open, onClose }) => {
             { type: 'url', message: 'Некорректная ссылка' },
           ]}
         >
-          <Input />
+          <Input disabled={isLoading} />
         </Form.Item>
       </Form>
     </Modal>

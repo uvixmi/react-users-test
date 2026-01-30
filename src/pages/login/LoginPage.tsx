@@ -2,20 +2,23 @@ import React from 'react';
 import { Button, Input, Typography, notification } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { loginRequest } from '../../features/auth/api/login';
-import { setToken, isAuth } from '../../shared/lib/auth';
+import { useAuth } from '../../shared/lib/authContext';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const { login, isAuthenticated } = useAuth();
 
-  const [login, setLogin] = React.useState('');
+
+
+  const [loginValue, setLoginValue] = React.useState('');
   const [password, setPassword] = React.useState('');
 
   const { mutate, isLoading } = useMutation<string, Error>({
-    mutationFn: () => loginRequest(login, password),
+    mutationFn: () => loginRequest(loginValue, password),
     onSuccess: (token) => {
-      setToken(token);
-      navigate('/users');
+      login(token);
+      navigate('/users', { replace: true });
     },
     onError: (error) => {
       notification.error({
@@ -26,7 +29,7 @@ export const LoginPage = () => {
   });
 
 
-  if (isAuth()) {
+  if (isAuthenticated) {
     return <Navigate to="/users" replace />;
   }
 
@@ -36,8 +39,8 @@ export const LoginPage = () => {
 
       <Input
         placeholder="Логин"
-        value={login}
-        onChange={(e) => setLogin(e.target.value)}
+        value={loginValue}
+        onChange={(e) => setLoginValue(e.target.value)}
         style={{ marginBottom: 16 }}
       />
 
@@ -54,7 +57,7 @@ export const LoginPage = () => {
         loading={isLoading}
         onClick={() => mutate()}
       >
-        Войти
+        {isLoading ? '' : 'Войти'}
       </Button>
     </div>
   );
