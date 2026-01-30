@@ -11,19 +11,19 @@ export const LoginPage = () => {
   const [login, setLogin] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-const { mutate, isLoading } = useMutation<string, Error>({
-  mutationFn: () => loginRequest(login, password),
-  onSuccess: (token) => {
-    setToken(token);
-    navigate('/users');
-  },
-  onError: (error) => {
-    notification.error({
-      message: 'Ошибка авторизации',
-      description: error.message,
-    });
-  },
-});
+  const { mutate, isLoading } = useMutation<string, Error>({
+    mutationFn: () => loginRequest(login, password),
+    onSuccess: (token) => {
+      setToken(token);
+      navigate('/users');
+    },
+    onError: (error) => {
+      notification.error({
+        message: 'Ошибка авторизации',
+        description: error.message,
+      });
+    },
+  });
 
 
   if (isAuth()) {

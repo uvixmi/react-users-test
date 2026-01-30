@@ -42,7 +42,7 @@ export const EditUserModal: React.FC<Props> = ({ user, onClose }) => {
       onOk={() => form.submit()}
       onCancel={onClose}
       confirmLoading={updateMutation.isLoading}
-    
+
       closable={!updateMutation.isLoading}
       footer={[
         <Button
